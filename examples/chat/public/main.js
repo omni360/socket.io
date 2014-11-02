@@ -35,6 +35,21 @@ $(function() {
     log(message);
   }
 
+    function postObject(){
+    var object = editor.selected;
+
+    if(object != null){
+
+      var exporter = new THREE.ObjectExporter();
+
+      var postObj = JSON.stringify(exporter.parse( object ), null, '\t' );
+      postObj = postObj.replace( /[\n\t]+([\d\.e\-\[\]]+)/g, '$1' );
+      return postObj;   
+    }else{
+      alert("Select Object first!");
+    }
+
+  }
   // Sets the client's username
   function setUsername () {
     username = cleanInput($usernameInput.val().trim());
@@ -51,6 +66,8 @@ $(function() {
     }
   }
 
+
+
   // Sends a chat message
   function sendMessage () {
     var message = $inputMessage.val();
@@ -61,10 +78,12 @@ $(function() {
       $inputMessage.val('');
       addChatMessage({
         username: username,
-        message: message
+        //message: message + postObject(),
+        message: postObject(),
       });
       // tell server to execute 'new message' and send along one parameter
-      socket.emit('new message', message);
+      //socket.emit('new message', message);
+      socket.emit('new message', postObject());
     }
   }
 
