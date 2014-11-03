@@ -1,4 +1,4 @@
-$(function() {
+$(function syncMessage() {
   var FADE_TIME = 150; // ms
   var TYPING_TIMER_LENGTH = 400; // ms
   var COLORS = [
@@ -50,6 +50,20 @@ $(function() {
     }
 
   }
+
+  function AddObjecttoscene(data){
+
+    data = JSON.parse(data);
+    var loader = new THREE.ObjectLoader();
+
+    var result = loader.parse( data );
+
+      editor.addObject( result );
+      editor.select( result );
+
+    
+  }
+
   // Sets the client's username
   function setUsername () {
     username = cleanInput($usernameInput.val().trim());
@@ -258,6 +272,8 @@ $(function() {
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
     addChatMessage(data);
+    AddObjecttoscene(data.message);
+    // console.log(data);
   });
 
   // Whenever the server emits 'user joined', log it in the chat body
